@@ -71,48 +71,27 @@
       ?>
       <div id="side-collapse-<?=$this->escapeHtmlAttr($title) ?>" class="<?=implode(' ', $listClasses) ?>">
         <? if (isset($rangeFacets[$title])): ?>
-          <?=$this->context()->renderInContext('Recommend/SideFacets/range-facet.phtml', ['rangeFacets'=>$rangeFacets, 'title'=>$title, ]); ?>
+          <?=$this->context()->renderInContext('Recommend/SideFacets/range.phtml', [
+            'rangeFacets'=>$rangeFacets,
+            'title'=>$title
+          ]); ?>
         <? else: ?>
           <? if (in_array($title, $hierarchicalFacets)): ?>
-            <? $this->headScript()->appendFile('vendor/jsTree/jstree.min.js'); ?>
-            <? $this->headScript()->appendFile('facets.js'); ?>
-            <? $sort = isset($hierarchicalFacetSortOptions[$title]) ? $hierarchicalFacetSortOptions[$title] : ''; ?>
-            <? if (!in_array($title, $collapsedFacets)): ?>
-              <?
-              $script = <<<JS
-$(document).ready(function() {
-  initFacetTree($('#facet_{$this->escapeHtml($title)}'), true);
-});
-JS;
-              ?>
-              <?=$this->inlineScript(\Zend\View\Helper\HeadScript::SCRIPT, $script, 'SET'); ?>
-            <? else: ?>
-              <?
-              $script = <<<JS
-$('#side-collapse-{$this->escapeHtmlAttr($title)}').on('show.bs.collapse', function() {
-  initFacetTree($('#facet_{$this->escapeHtml($title)}'), true);
-});
-JS;
-              ?>
-              <?=$this->inlineScript(\Zend\View\Helper\HeadScript::SCRIPT, $script, 'SET'); ?>
-            <? endif; ?>
-            <li id="facet_<?=$this->escapeHtml($title)?>" class="jstree-facet"
-                  data-facet="<?=$this->escapeHtmlAttr($title)?>"
-                  data-path="<?=$this->currentPath()?>"
-                  data-exclude="<?=$allowExclude?>"
-                  data-operator="<?=$this->recommend->getFacetOperator($title)?>"
-                  data-exclude-title="<?=$this->transEsc('exclude_facet')?>"
-                  data-sort="<?=isset($hierarchicalFacetSortOptions[$title]) ? $hierarchicalFacetSortOptions[$title] : ''?>">
-            </li>
+            <?=$this->context()->renderInContext('Recommend/SideFacets/hierarchical.phtml', [
+              'allowExclude'=>$allowExclude,
+              'collapsedFacets'=>$collapsedFacets,
+              'hierarchicalFacetSortOptions'=>$hierarchicalFacetSortOptions,
+              'title'=>$title
+            ]); ?>
             <noscript>
           <? endif; ?>
           <? foreach ($cluster['list'] as $i=>$thisFacet): ?>
-              <?
-                if(strlen($thisFacet['displayText']) == 0) {
-                  $thisFacet['displayText'] = "-";
-                }
-              ?>
-              <? $moreClass = 'narrowGroupHidden-'.$this->escapeHtmlAttr($title).' hidden'; ?>
+            <?
+              if(strlen($thisFacet['displayText']) == 0) {
+                $thisFacet['displayText'] = "-";
+              }
+            ?>
+            <? $moreClass = 'narrowGroupHidden-'.$this->escapeHtmlAttr($title).' hidden'; ?>
             <? if ($i == 6): ?>
               <a id="more-narrowGroupHidden-<?=$this->escapeHtmlAttr($title)?>" class="list-group-item" href="javascript:moreFacets('narrowGroupHidden-<?=$title ?>')"><?=$this->transEsc('more')?> ...</a>
             <? endif; ?>
@@ -126,29 +105,30 @@ JS;
                 <?=$this->escapeHtml($thisFacet['displayText'])?>
               </a>
             <? else: ?>
-              <? $addURL = $this->currentPath().$results->getUrlQuery()->addFacet($title, $thisFacet['value'], $thisFacet['operator']); ?>
+              <?
+                $addURL = $this->currentPath().$results->getUrlQuery()->addFacet($title, $thisFacet['value'], $thisFacet['operator']);
+                $badge = '<span class="badge">' . $this->localizedNumber($thisFacet['count']);
+                if ($allowExclude) {
+                  $badge .= '<a href="'.$this->currentPath().$results->getUrlQuery()->addFacet($title, $thisFacet['value'], 'NOT')
+                    . '" title="'.$this->transEsc('exclude_facet').'"><i class="fa fa-times"></i></a>';
+                }
+                $badge .= '</span>';
+                $classes = 'list-group-item facet'.$thisFacet['operator'];
+                if ($i>5) $classes .= ' ' . $moreClass;
+              ?>
               <? if ($allowExclude): ?>
-                <li class="list-group-item facet<?=$thisFacet['operator'] ?><? if ($i>5): ?> <?=$moreClass ?><?endif ?>">
-              <? else: ?>
-                <a href="<?=$addURL ?>" class="list-group-item facet<?=$thisFacet['operator'] ?><? if ($i>5): ?> <?=$moreClass ?><?endif ?>">
-              <? endif; ?>
-              <span class="badge">
-                <?=$this->localizedNumber($thisFacet['count'])?>
-                <? if ($allowExclude): ?>
-                  <a href="<?=$this->currentPath().$results->getUrlQuery()->addFacet($title, $thisFacet['value'], 'NOT') ?>" title="<?=$this->transEsc('exclude_facet') ?>"><i class="fa fa-times"></i></a>
-                <? endif; ?>
-              </span>
-              <? if ($allowExclude): ?>
-                <a href="<?=$addURL ?>">
-              <? endif; ?>
-              <? if($thisFacet['operator'] == 'OR'): ?>
-                <i class="fa fa-square-o"></i>
-              <? endif; ?>
-              <?=$this->escapeHtml($thisFacet['displayText'])?>
-              <? if ($allowExclude): ?>
+                <li class="<?=$classes ?>">
+                  <?=$badge ?>
+                  <a href="<?=$addURL ?>">
+                    <? if($thisFacet['operator'] == 'OR'): ?><i class="fa fa-square-o"></i><? endif; ?>
+                    <?=$this->escapeHtml($thisFacet['displayText'])?>
                   </a>
                 </li>
               <? else: ?>
+                <a href="<?=$addURL ?>" class="<?=$classes ?>">
+                  <?=$badge ?>
+                  <? if($thisFacet['operator'] == 'OR'): ?><i class="fa fa-square-o"></i><? endif; ?>
+                  <?=$this->escapeHtml($thisFacet['displayText'])?>
                 </a>
               <? endif; ?>
             <? endif; ?>

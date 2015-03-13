@@ -1577,9 +1577,18 @@ class AjaxController extends AbstractBase
         }
 
         return $this->output(
-            $facetHelper->buildFacetArray(
-                $facet, $facetList, $results->getUrlQuery()
-            ),
+            json_decode('[
+                {"id" : "MainLibrary", "displayText" : "Main Library", "count" : 4, "children": [
+                    {"id" : "Adults", "displayText" : "Adults", "count" : 3, "children": [
+                        {"id" : "TestDoc1", "displayText" : "Test Document 1"},
+                        {"id" : "TestDoc2", "displayText" : "Test Document 2"},
+                        {"id" : "TestDoc3", "displayText" : "Test Document 3"}
+                    ]},
+                    {"id" : "Children", "displayText" : "Children", "count" : 1, "children": [
+                        {"id" : "TestDoc4", "displayText" : "Test Document 4"}
+                    ]}
+                ]}
+            ]'),
             self::STATUS_OK
         );
     }
