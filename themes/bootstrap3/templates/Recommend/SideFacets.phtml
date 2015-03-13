@@ -55,7 +55,6 @@
 <? $sideFacetSet = $this->recommend->getFacetSet(); $rangeFacets = $this->recommend->getAllRangeFacets(); ?>
 <? if (!empty($sideFacetSet) && $results->getResultTotal() > 0): ?>
   <? foreach ($sideFacetSet as $title => $cluster): ?>
-    <? $allowExclude = $this->recommend->excludeAllowed($title); ?>
     <ul class="list-group facet" id="side-panel-<?=$this->escapeHtmlAttr($title) ?>">
       <li class="list-group-item title<? if(!empty($collapsedFacets)): ?><? if(in_array($title, $collapsedFacets)): ?> collapsed<? endif ?>" data-toggle="collapse" href="#side-collapse-<?=$this->escapeHtmlAttr($title) ?><? endif; ?>">
         <?=$this->transEsc($cluster['label'])?>
@@ -70,6 +69,7 @@
         }
       ?>
       <div id="side-collapse-<?=$this->escapeHtmlAttr($title) ?>" class="<?=implode(' ', $listClasses) ?>">
+        <? $allowExclude = $this->recommend->excludeAllowed($title); ?>
         <? if (isset($rangeFacets[$title])): ?>
           <?=$this->context()->renderInContext('Recommend/SideFacets/range.phtml', [
             'rangeFacets'=>$rangeFacets,
