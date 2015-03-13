@@ -254,19 +254,6 @@ label.list-group-item {border-radius:0;font-weight:normal;margin-top:0;padding-l
 /* --- Sidebar --- */
 /* Sidebar rounded corners */
 .sidebar {
-  .list-group:not(.filters) .title {
-    cursor:pointer;
-    &.collapsed {
-      border-radius:@border-radius-base;
-      &:after {
-        content:'\25BC';
-      }
-    }
-    &:after {
-      content:'\25B2';
-      float:right;
-    }
-  }
   .collapse,.collapsing {
     .list-group-item {
       border-top-left-radius:0px;
@@ -280,6 +267,21 @@ label.list-group-item {border-radius:0;font-weight:normal;margin-top:0;padding-l
   #side-collapse-publishDate .list-group-item {
     border-bottom-left-radius:@border-radius-base;
     border-bottom-right-radius:@border-radius-base;
+  }
+  // Collapsing facet arrows, radius, and pointer
+  .list-group:not(.filters) [data-toggle="collapse"] {
+    cursor:pointer;
+    &.collapsed {
+      border-radius:@border-radius-base;
+      &:after {content: "\f107";} // Font Awesome .fa-angle-up
+    }
+    &:after {
+      font-family: FontAwesome;
+      content: "\f106"; // Font Awesome .fa-angle-down
+      float: right;
+      font-size: 1.33333em; // Font Awesome .fa-lg
+      line-height: 1.125em;
+    }
   }
 }
 .list-group-item, .badge {

@@ -375,7 +375,7 @@ $(document).ready(function() {
 
   // Advanced facets
   $('.facetOR').click(function() {
-    $(this).closest('.collapse').html('<div class="list-group-item">'+vufindString.loading+'...</div>');
+    $(this).closest('.facet-list').html('<div class="list-group-item">'+vufindString.loading+'...</div>');
     window.location.assign($(this).attr('href'));
   });
 
