@@ -22,7 +22,8 @@
 <? endif; ?>
 <? $extraFilters = isset($this->extraSideFacetFilters) ? $this->extraSideFacetFilters : array(); ?>
 <? $collapsedFacets = $this->recommend->getCollapsedFacets() ?>
-<? $filterList = array_merge($results->getParams()->getFilterList(true), $extraFilters); if (!empty($filterList)): ?>
+<? $filterList = array_merge($results->getParams()->getFilterList(true), $extraFilters); ?>
+<? if (!empty($filterList)): ?>
   <ul class="list-group filters">
     <li class="list-group-item title"><?=$this->transEsc('Remove Filters')?></li>
     <? foreach ($filterList as $field => $filters): ?>
@@ -30,7 +31,7 @@
         <?
           $index = isset($filter['field']) ? array_search($filter['field'], $collapsedFacets) : false;
           if ($index !== false) {
-              unset($collapsedFacets[$index]); // Open if we have a match
+            unset($collapsedFacets[$index]); // Open if we have a match
           }
           if (isset($filter['specialType']) && $filter['specialType'] == 'keyword') {
             $removeLink = $this->currentPath().$results->getUrlQuery()->replaceTerm($filter['value'], '');
