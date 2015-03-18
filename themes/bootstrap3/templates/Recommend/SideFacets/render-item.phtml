@@ -29,13 +29,13 @@
     if ($i>5) $classes .= ' ' . $moreClass;
   ?>
   <? if ($allowExclude): ?>
-    <li class="<?=$classes ?>">
+    <div class="<?=$classes ?>">
       <?=$badge ?>
       <a href="<?=$addURL ?>">
         <? if($facet['operator'] == 'OR'): ?><i class="fa fa-square-o"></i><? endif; ?>
         <?=$this->escapeHtml($facet['displayText'])?>
       </a>
-    </li>
+    </div>
   <? else: ?>
     <a href="<?=$addURL ?>" class="<?=$classes ?>">
       <?=$badge ?>
