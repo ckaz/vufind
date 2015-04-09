@@ -3,12 +3,11 @@
     $facet['displayText'] = "-";
   }
 ?>
-<? $moreClass = 'narrowGroupHidden-'.$this->escapeHtmlAttr($title).' hidden'; ?>
-<? if ($i == 6): ?>
-  <a id="more-narrowGroupHidden-<?=$this->escapeHtmlAttr($title)?>" class="list-group-item" href="javascript:moreFacets('narrowGroupHidden-<?=$title ?>')"><?=$this->transEsc('more')?> ...</a>
+<? if ($number == 6): ?>
+  <a id="more-narrowGroupHidden-<?=$this->escapeHtmlAttr($title)?>" class="list-group-item" href="javascript:moreFacets('narrowGroupHidden-<?=$this->escapeHtmlAttr($title) ?>')"><?=$this->transEsc('more')?> ...</a>
 <? endif; ?>
 <? if ($facet['isApplied']): ?>
-  <a class="list-group-item active<? if ($i>5): ?><?=$moreClass ?><?endif ?><? if ($facet['operator'] == 'OR'): ?> facetOR applied<? endif ?>" href="<?=$this->currentPath().$results->getUrlQuery()->removeFacet($title, $facet['value'], true, $facet['operator']) ?>">
+  <a class="list-group-item active<? if ($number > 5): ?><?=$moreClass ?><?endif ?><? if ($facet['operator'] == 'OR'): ?> facetOR applied<? endif ?>" href="<?=$this->currentPath().$results->getUrlQuery()->removeFacet($title, $facet['value'], true, $facet['operator']) ?>">
     <? if ($facet['operator'] == 'OR'): ?>
       <i class="fa fa-check-square-o"></i>
     <? else: ?>
@@ -26,7 +25,7 @@
     }
     $badge .= '</span>';
     $classes = 'list-group-item facet'.$facet['operator'];
-    if ($i>5) $classes .= ' ' . $moreClass;
+    if ($number > 5) $classes .= ' ' . $moreClass;
   ?>
   <? if ($allowExclude): ?>
     <div class="<?=$classes ?>">

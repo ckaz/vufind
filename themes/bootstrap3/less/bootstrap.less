@@ -254,14 +254,16 @@ label.list-group-item {border-radius:0;font-weight:normal;margin-top:0;padding-l
 /* --- Sidebar --- */
 /* Sidebar rounded corners */
 .sidebar {
-  .collapse,.collapsing {
-    .list-group-item {
-      border-top-left-radius:0px;
-      border-top-right-radius:0px;
-      &[id^=more] {
-        border-bottom-left-radius:@border-radius-base;
-        border-bottom-right-radius:@border-radius-base;
-      }
+  .facet-list .list-group-item {
+    border-radius:0px;
+    border-radius:0px;
+    &.title {
+      border-top-left-radius:@border-radius-base;
+      border-top-right-radius:@border-radius-base;
+    }
+    &[id^=more], &:last-child {
+      border-bottom-left-radius:@border-radius-base;
+      border-bottom-right-radius:@border-radius-base;
     }
   }
   #side-collapse-publishDate .list-group-item {

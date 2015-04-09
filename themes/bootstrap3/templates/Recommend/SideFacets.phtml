@@ -86,15 +86,18 @@
             ]); ?>
             <noscript>
           <? endif; ?>
+          <? $moreClass = 'narrowGroupHidden-'.$this->escapeHtmlAttr($title).' hidden'; ?>
           <? foreach ($cluster['list'] as $i=>$thisFacet): ?>
             <?=$this->context()->renderInContext('Recommend/SideFacets/render-item.phtml', [
               'allowExclude'=>$allowExclude,
               'facet'=>$thisFacet,
+              'moreClass'=>$moreClass,
+              'number'=>$i,
               'results'=>$results,
               'title'=>$title
             ]); ?>
           <? endforeach; ?>
-          <? if ($i > 5): ?><a class="list-group-item <?=$moreClass ?>" href="javascript:lessFacets('narrowGroupHidden-<?=$title ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
+          <? if ($i > 5): ?><a class="list-group-item <?=$moreClass ?>" href="javascript:lessFacets('narrowGroupHidden-<?=$this->escapeHtmlAttr($title) ?>')"><?=$this->transEsc('less')?> ...</a><? endif; ?>
         <? endif; ?>
         <? if (in_array($title, $hierarchicalFacets)): ?>
           </noscript>
