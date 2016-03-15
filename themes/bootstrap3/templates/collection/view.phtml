@@ -94,7 +94,7 @@
   </div>
 
   <? if (isset($activeTabObj) && is_callable(array($activeTabObj, 'getSideRecommendations'))): ?>
-    <div class="<?=$this->layoutClass('sidebar')?>">
+    <aside class="<?=$this->layoutClass('sidebar')?>">
       <? foreach ($activeTabObj->getSideRecommendations() as $current): ?>
         <?=$this->recommend($current)?>
       <? endforeach; ?>

@@ -26,7 +26,7 @@
   </div>
 
   <? if ($saveSupported): ?>
-    <div class="<?=$this->layoutClass('sidebar')?>">
+    <aside class="<?=$this->layoutClass('sidebar')?>">
       <?=$this->context($this)->renderInContext(
           "myresearch/menu.phtml",
           // Only activate search history in account menu if user is logged in.
