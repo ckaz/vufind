@@ -52,5 +52,18 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
         $this->validatePath('', 'Home page');
         $this->validatePath('/Search/Results?lookfor=test&type=AllFields', '"test" search');
         $this->validatePath('/Record/testdeweybrowse', 'Record page');
+        $this->validatePath('/MyResearch/Home', 'Logged Out My Research');
+        // Login?
+        $user = $this->getMockUser();
+        $request = $this->getMockRequest();
+        $pm = $this->getMockPluginManager();
+        $db = $pm->get('Database');
+        $db->expects($this->once())->method('authenticate')->with($request)->will($this->returnValue($user));
+        $manager = $this->getManager([], null, null, $pm);
+        $request->getPost()->set('csrf', $manager->getCsrfHash());
+        $this->assertEquals($user, $manager->login($request));
+        $this->assertEquals($user, $manager->isLoggedIn());
+        // Logged in
+        $this->validatePath('/MyResearch/Home', 'Logged In My Research');
     }
 }

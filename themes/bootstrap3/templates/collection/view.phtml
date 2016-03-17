@@ -98,7 +98,7 @@
       <? foreach ($activeTabObj->getSideRecommendations() as $current): ?>
         <?=$this->recommend($current)?>
       <? endforeach; ?>
-    </div>
+    </aside>
   <? endif; ?>
 </div>
 <?=$this->inlineScript(\Zend\View\Helper\HeadScript::SCRIPT, '$(document).ready(recordDocReady);', 'SET'); ?>
