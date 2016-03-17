@@ -28,7 +28,7 @@
 namespace VuFindTest;
 use Kevintweber\PhpunitMarkupValidators\Assert\AssertHTML5;
 
-class HtmlTest extends \PHPUnit_Framework_TestCase
+class HtmlTest extends Auth\ManagerTest
 {
     /**
      * Get base URL of running VuFind instance.
@@ -58,10 +58,9 @@ class HtmlTest extends \PHPUnit_Framework_TestCase
         $request = $this->getMockRequest();
         $pm = $this->getMockPluginManager();
         $db = $pm->get('Database');
-        $db->expects($this->once())->method('authenticate')->with($request)->will($this->returnValue($user));
+        $db->expects($this->once())->method('create')->with($request)->will($this->returnValue($user));
         $manager = $this->getManager([], null, null, $pm);
-        $request->getPost()->set('csrf', $manager->getCsrfHash());
-        $this->assertEquals($user, $manager->login($request));
+        $this->assertEquals($user, $manager->create($request));
         $this->assertEquals($user, $manager->isLoggedIn());
         // Logged in
         $this->validatePath('/MyResearch/Home', 'Logged In My Research');
