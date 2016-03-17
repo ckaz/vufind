@@ -41,7 +41,8 @@
 
     <a id="moreInfoToggle" href="#" class="hidden"><?=$this->transEsc('more_info_toggle')?></a>
     <?/* Display Main Details */?>
-    <table id="collectionInfo" class="table table-striped" summary="<?=$this->transEsc('Bibliographic Details')?>">
+    <table id="collectionInfo" class="table table-striped">
+      <caption><?=$this->transEsc('Bibliographic Details')?></caption>
       <? $authors = $this->driver->getDeduplicatedAuthors(); ?>
       <? if (isset($authors['main']) && !empty($authors['main'])): ?>
       <tr>

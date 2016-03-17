@@ -50,8 +50,7 @@
     </div>
 
     <? if (count($this->tabs) > 0): ?>
-      <a name="tabnav"></a>
-      <div class="record-tabs">
+      <div id="tabnav" class="record-tabs">
         <ul class="nav nav-tabs">
           <? foreach ($this->tabs as $tab => $obj): ?>
             <? // add current tab to breadcrumbs if applicable:
