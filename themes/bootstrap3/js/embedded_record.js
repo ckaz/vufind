@@ -52,7 +52,7 @@ function loadEmbeddedCookies() {
 }
 
 function showhideTabs(tabid) {
-  $('#'+tabid).parents('.search_tabs').find('.tab-pane.active').removeClass('active');
+  $('#'+tabid).parents('.result').find('.search_tabs .tab-pane.active').removeClass('active');
   $('#'+tabid+'-tab').addClass('active');
   $('#'+tabid).tab('show');
 }
@@ -116,104 +116,67 @@ function toggleDataView() {
     return true;
   }
   // Insert new elements
+  var shortNode = $(this).closest('.short-view');
   var mainNode = $(this).closest('.result');
-  if (!$(this).hasClass('setup')) {
-    var left = $(this).closest('.middle').position().left-1;
-    $('<style>.result.fetching .title, .result.expanded .title {padding-left: '+left+'px;}</style>').appendTo('body');
-    // Add classes to view and result container
-    mainNode.find('.left,.right').addClass('short-view');
-    mainNode.find('.short-view').addClass('collapse')
-    var longNode = $('<div class="long-view collapse"></div>');
-    // Add loading status
-    mainNode.find('.row')
-      .after('<div class="loading hidden"><i class="fa fa-spin fa-spinner"></i> '+VuFind.translate('loading')+'...</div>')
-      .after(longNode);
-    longNode.on('show.bs.collapse', function(e) {
-      if (!$(e.target).hasClass('long-view')) return;
-      mainNode.addClass('expanding');
-    });
-    longNode.on('shown.bs.collapse', function(e) {
-      if (!$(e.target).hasClass('long-view')) return;
-      mainNode.removeClass('expanding fetching').addClass('expanded');
-    });
-    longNode.on('hide.bs.collapse', function(e) {
-      if (!$(e.target).hasClass('long-view')) return;
-      mainNode.removeClass('expanded').addClass('expanding');
-      // Cookies
-      removeFromEmbeddedCookie(mainNode.find('.hiddenId').val());
-    });
-    longNode.on('hidden.bs.collapse', function(e) {
-      if (!$(e.target).hasClass('long-view')) return;
-      mainNode.removeClass('expanding');
-    });
-    $(this).addClass('setup');
-  }
-  // Gather information
-  var div_id = mainNode.find(".hiddenId")[0].value;
-  var shortNode = mainNode.find('.short-view');
-  var longNode = mainNode.find('.long-view');
-  // Toggle visibility
-  if (!longNode.is(":visible")) {
-    shortNode.collapse("hide");
-    // AJAX for information
-    if (longNode.is(':empty')) {
-      var loadingNode = mainNode.find('.loading');
-      mainNode.addClass('fetching');
-      loadingNode.removeClass("hidden");
-      var url = VuFind.path + '/AJAX/JSON?' + $.param({
-        method:'getRecordDetails',
-        id:div_id,
-        type:viewType,
-        source:mainNode.find(".hiddenSource")[0].value
-      });
-      $.ajax({
-        dataType: 'json',
-        url: url,
-        success: function(response) {
-          if (response.status == 'OK') {
-            // Insert tabs html
-            longNode.html(response.data);
-            // Hide loading
-            loadingNode.addClass("hidden");
-            longNode.collapse("show");
-            // Load first tab
-            var $firstTab = $(longNode).find('.recordTabs li.active a');
-            if ($firstTab.length > 0) {
-              ajaxFLLoadTab($firstTab.attr('id'));
-            }
-            // Bind tab clicks
-            longNode.find('.search_tabs .recordTabs a').click(function() {
-              addToEmbeddedCookie(mainNode.attr('id'), $(this).attr('id'));
-              return ajaxFLLoadTab(this.id);
-            });
-            longNode.find('.panel.noajax .accordion-toggle').click(function() {
-              window.location.href = $(this).attr('data-href');
-            });
-            longNode.find('[id^=usercomment]').find('input[type=submit]').unbind('click').click(function() {
-              return registerAjaxCommentRecord(
-                longNode.find('[id^=usercomment]').find('input[type=submit]').closest('form')
-              );
-            });
-            // Add events to record toolbar
-            VuFind.lightbox.bind(longNode);
-            checkSaveStatuses(shortNode.closest('.result,.record'));
-          }
+  var timeID = new Date().getTime()+'';
+  var tabs = $('<ul class="nav nav-tabs"><li class="active"><a id="'+timeID+'">'+VuFind.translate('Overview')+'</a></li>'
+             + '<li class="loading"><a><i class="fa fa-spin fa-spinner"></i></a></li></ul>');
+  var longNode = $('<div class="search_tabs tab-content"></div>');
+  shortNode.before(tabs);
+  shortNode.before(longNode);
+  var container = $('<div class="tab-pane" id="'+timeID+'-tab"></div>');
+  longNode.append(container);
+  shortNode.appendTo(container);
+  // Load AJAX view
+  var div_id = shortNode.find(".hiddenId")[0].value;
+  var url = VuFind.path + '/AJAX/JSON?' + $.param({
+    method:'getRecordDetails',
+    id:div_id,
+    type:viewType,
+    source:mainNode.find(".hiddenSource")[0].value
+  });
+  $.ajax({
+    dataType: 'json',
+    url: url,
+    success: function(response) {
+      if (response.status == 'OK') {
+        // Deactivate overview tab
+        tabs.find('li.active').removeClass('active');
+        tabs.find('.loading').remove();
+        // Insert tabs
+        var components = $(response.data);
+        $(components).find('.recordTabs li').appendTo(tabs);
+        $(components).find('.tab-pane').appendTo(longNode);
+        // Load first tab
+        var $firstTab = tabs.find('li.active a');
+        if ($firstTab.length > 0) {
+          ajaxFLLoadTab($firstTab.attr('id'));
         }
-      });
-    } else {
-      longNode.collapse("show");
+        // Bind tab clicks
+        tabs.find('a').click(function() {
+          addToEmbeddedCookie(mainNode.attr('id'), $(this).attr('id'));
+          return ajaxFLLoadTab(this.id);
+        });
+        longNode.find('.panel.noajax .accordion-toggle').click(function() {
+          window.location.href = $(this).attr('data-href');
+        });
+        longNode.find('[id^=usercomment]').find('input[type=submit]').unbind('click').click(function() {
+          return registerAjaxCommentRecord(
+            longNode.find('[id^=usercomment]').find('input[type=submit]').closest('form')
+          );
+        });
+        // Add events to record toolbar
+        VuFind.lightbox.bind(longNode);
+        checkSaveStatuses(shortNode.closest('.result,.record'));
+      }
     }
-    if (!mainNode.find('.getFull').hasClass('auto')) {
-      addToEmbeddedCookie(mainNode.attr('id'), $(this).attr('id'));
-    }
-  } else {
-    shortNode.collapse("show");
-    longNode.collapse("hide");
-  }
+  });
+  addToEmbeddedCookie(mainNode.attr('id'), div_id);
+  $(this).unbind('click');
   return false;
 }
 
 $(document).ready(function() {
-  $('.getFull').click(toggleDataView);
+  $('.getFull').bind('click', toggleDataView);
   loadEmbeddedCookies();
 });
