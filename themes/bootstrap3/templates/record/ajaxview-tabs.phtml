@@ -2,12 +2,7 @@
   $this->defaultTab = strtolower($this->defaultTab);
   $idSuffix = $this->escapeHtmlAttr(md5($this->driver->getUniqueId() . '|' . $this->driver->getSourceIdentifier()));
 ?>
-<div class="search_tabs record recordId source<?=$this->escapeHtmlAttr($this->driver->getResourceSource())?>" id="tabs_<?=$idSuffix?>">
-  <input type="hidden" value="<?=$this->escapeHtmlAttr($this->driver->getUniqueId())?>" class="hiddenId" id="record_id_<?=$idSuffix?>" />
-  <input type="hidden" value="<?=$this->escapeHtmlAttr($this->driver->getResourceSource()) ?>" class="hiddenSource" />
-  <?=$this->flashmessages()?>
-
-  <a name="tabnav"></a>
+<div class="search_tabs">
   <ul class="recordTabs nav nav-tabs">
     <? $coreMetadata = trim($this->record($this->driver)->getCoreMetadata()); ?>
     <? if (!empty($coreMetadata)): ?>
