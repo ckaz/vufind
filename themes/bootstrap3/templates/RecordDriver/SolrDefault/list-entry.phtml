@@ -11,14 +11,14 @@
   }
 ?>
 <div class="row result<? if($this->driver->supportsAjaxStatus()): ?> ajaxItem<? endif ?>">
-  <input type="hidden" value="<?=$id ?>" class="hiddenId" />
-  <input type="hidden" value="<?=$source ?>" class="hiddenSource" />
   <div class="col-xs-1">
     <div class="checkbox">
       <label><?=$this->record($this->driver)->getCheckbox() ?></label>
     </div>
   </div>
-  <div class="col-xs-11">
+  <div class="col-xs-11 short-view">
+    <input type="hidden" value="<?=$id ?>" class="hiddenId" />
+    <input type="hidden" value="<?=$source ?>" class="hiddenSource" />
     <div class="row">
       <? $cover=$this->record($this->driver)->getCover('list-entry', 'small', $this->recordLink()->getUrl($this->driver)); ?>
       <? if ($cover): ?>
