@@ -25,7 +25,7 @@
         "vufind-org/vufindhttp": "2.1.0",
         "zendframework/zendframework": "2.4.6",
         "zendframework/zendrest": "2.0.2",
-        "zendframework/zendservice-amazon": "2.0.4",
+        "zendframework/zendservice-amazon": "2.0.x-dev",
         "zf-commons/zfc-rbac": "2.5.2"
     },
     "require-dev": {
