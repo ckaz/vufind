@@ -1,17 +1,19 @@
-[![Build Status](https://travis-ci.org/vufind-org/vufind.svg?branch=master)](https://travis-ci.org/vufind-org/vufind)
-VuFind
-======
+# Vufind, One Searchbox
 
-Introduction
-------------
-VuFind is an open source discovery environment for searching a collection of
-records.  To learn more, visit https://vufind.org.
+This page is to show the differences between the two searchbox and one search box appearance and styling.
 
+## Bootstrap Full Width
+Before:
+After:
 
-Installation
-------------
-See online documentation at https://vufind.org/wiki/installation
+## Bootstrap 1000px Width
+Before:
+After:
 
-Contributing
-------------
-See our [developers handbook](https://vufind.org/wiki/development) for more information.
+## Bootprint Full Width
+Before:
+After:
+
+## Bootprint 1000px Width
+Before:
+After:
